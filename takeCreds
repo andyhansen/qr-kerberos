@@ -1,0 +1,3 @@
+#!/bin/bash
+xxd -p /tmp/krb5cc_1000 > creds.out
+kdestroy

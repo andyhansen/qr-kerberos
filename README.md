@@ -1,0 +1,3 @@
+takeCreds && createQRCodes
+
+scanQRCodes && restoreCreds

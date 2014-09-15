@@ -1,0 +1,20 @@
+\contentsline {section}{\numberline {1}Introduction}{1}
+\contentsline {section}{\numberline {2}Background}{2}
+\contentsline {subsection}{\numberline {2.1}Kerberos}{2}
+\contentsline {subsection}{\numberline {2.2}QR Codes}{2}
+\contentsline {section}{\numberline {3}Considerations}{2}
+\contentsline {subsection}{\numberline {3.1}Kerberos Ticket Expiry Times}{2}
+\contentsline {subsection}{\numberline {3.2}QR Code Versions}{2}
+\contentsline {section}{\numberline {4}My Progress}{3}
+\contentsline {subsection}{\numberline {4.1}Infrastructure}{3}
+\contentsline {subsubsection}{Proof of Concept}{4}
+\contentsline {subsubsection}{Difference From Aims and Objectives}{4}
+\contentsline {section}{\numberline {5}Related Work}{5}
+\contentsline {subsection}{\numberline {5.1}Web Authentication Using A Mobile Phone}{5}
+\contentsline {subsection}{\numberline {5.2}QR Code Based Door Access}{5}
+\contentsline {section}{\numberline {6}What I've Achieved}{5}
+\contentsline {subsection}{\numberline {6.1}Meeting Room}{5}
+\contentsline {section}{\numberline {7}Future Work}{5}
+\contentsline {subsection}{\numberline {7.1}Android Application}{5}
+\contentsline {subsection}{\numberline {7.2}Collaboration On A LAN}{6}
+\contentsline {subsection}{\numberline {7.3}Transferring A Login Session}{6}

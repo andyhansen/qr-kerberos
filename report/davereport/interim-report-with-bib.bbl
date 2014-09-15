@@ -1,0 +1,51 @@
+\begin{thebibliography}{1}
+
+\bibitem{QRRelated}
+Jeremy Blum.
+\newblock Libetech qr code door lock.
+\newblock \url{http://www.jeremyblum.com/portfolio/libetech/}, 2014.
+
+\bibitem{KerbDroid}
+Chris Conlon.
+\newblock cconlon/cconlon/krb5-anonsvn.
+\newblock \url{https://github.com/cconlon/krb5-anonsvn}, 2014.
+
+\bibitem{KerbApp}
+Chris Conlon.
+\newblock cconlon/kerberos-android-ndk.
+\newblock \url{https://github.com/cconlon/kerberos-android-ndk}, 2014.
+
+\bibitem{YouTubeDemo}
+Andy Hansen.
+\newblock Qr code proof of concept.
+\newblock
+  \url{https://www.youtube.com/watch?v=v8ZZWC-jXeM&list=UU3CfgH3Wtm0TTpxq0I92XFw},
+  2014.
+
+\bibitem{QR}
+Denso~Wave Incorporated.
+\newblock What is a qr code?
+\newblock \url{http://www.qrcode.com/en/about/}, 2014.
+
+\bibitem{KerbUpdate}
+MIT Kerberos.
+\newblock Kerberos version 4 end of life announcement.
+\newblock \url{http://web.mit.edu/kerberos/krb4-end-of-life.html}, 2014.
+
+\bibitem{Kerb}
+B.C. Neuman and T.~Ts'o.
+\newblock Kerberos: an authentication service for computer networks.
+\newblock {\em Communications Magazine, IEEE}, 32(9):33--38, Sept 1994.
+
+\bibitem{Bind}
+Douglas~Brian Terry, Mark Painter, David~W Riggle, and Songian Zhou.
+\newblock {\em The berkeley internet name domain server}.
+\newblock University of California, 1984.
+
+\bibitem{Wu04secureweb}
+Min Wu, Simson Garfinkel, and Rob Miller.
+\newblock Secure web authentication with mobile phones.
+\newblock In {\em DIMACS Workshop on Usable Privacy and Security Software},
+  2004.
+
+\end{thebibliography}

@@ -9,6 +9,7 @@ import sys
 import qrcode
 import subprocess
 
+# Note that the 1000 here is the userid of the current user
 if subprocess.call(["ls", "/tmp/krb5cc_1000"]) == 2:
     exit("No kerberos ticket convert")
 
@@ -20,7 +21,7 @@ text = subprocess.check_output(["xxd", "-p", "/tmp/krb5cc_1000"]).replace("\n", 
 #text = file(fileName).read().replace("\n", "")
 
 #no real reason I picked this limit
-limit = 796
+limit = 1800
 current = 0
 total = round(len(text) / (limit*1.0))
 qrArray = []

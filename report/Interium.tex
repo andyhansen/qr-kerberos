@@ -10,7 +10,7 @@
 \title{QR Codes for Security and Authentication}
 \author{Andy Hansen\\\\
 Supervised by David Eyers} 
-\date{July 17, 2014} 
+\date{Sep 19, 2014} 
 \maketitle
 \tableofcontents
 
@@ -50,8 +50,32 @@ In my project QR codes are going to be used as a primary communication channel b
 
 Unfortunately QR codes do not have support direct binary encoding, this means that Kerberos tickets (which are stored in binary) need to be converted to an alphanumeric format before being encoded. I am currently converting the tickets to hex but in the future I will convert them to base64 because it makes more use of the alphanumeric character set, allowing QR code sizes to be reduced further.
 
-\subsubsection{Proof of Concept} 
-I am going to give a run through of my basic use case to show how a user’s ticket can be transferred from one machine to another using QR codes \cite{YouTubeDemo}. Though basic, it proves that it is possible to for a program to be implemented using a phone which can store Kerberos tickets as QR codes, and for a scanned QR code to be put into the ticket cache as a valid Kerberos ticket. My proof of concept operates as outlined here:
+\subsection{Dynamic Grouping of Users}
+Dynamic grouping of users is a concept which is used in two of my use cases. The idea is that a Kerberos enabled network has a set of groups with exclusive access to particular resources. A user needs to be a member of the group controling the resources before they are given access. Grouping gives the system administrator more control of the resources, it means they can lock down resources to a particular set of people for small time periods. Users are added to the group when they meet certain conditions e.g\. proximity to the resources. Kerberos lacks built in group control, so it needs to be implemented by the service which is using Kerberos. By putting it into Kerberos itself it allows an admin to very easily control when resources can be accessed without needing to change grouping information for each of the resources.
+%need to mention that there is no build in support for Kerberos groups at the moment
+
+The idea of a dynamic group is that the user must perform an action which will get them added to the group, once they are in the group they have access to that groups resources, but will lose them again once they leave the group. How a user is added to a group can be done a number of different ways that I will go into shortly. Groups can be set up for meetings so that the users can access shared resources for the duration of the meeting, or could be used to ensure that the user can only log into a computer if they are in the room. By having these restrictions there is reduced risk of the users account, or resources being abused by a malicious user.
+
+There are many ways of saying if a user is in the room or not, all are fit for different situations. The three main ways considered are: locating the user with Wi-Fi, GPS, and scanning of QR codes which will come in two forms; codes scanned an admin, and codes scanned by the user.
+\begin{itemize}
+
+\item Wi-Fi: It is possible to triangulate a user’s position using multiple Wi-Fi routers. As long as the user is connected to the systems Wi-Fi then their position can be worked out within X meters, which means that the system would be able to detect which room a user is in. The problem with this system is that it requires Kerberos to be integrated with the routers. It also means there needs to be a database of MAC addresses so that when a device is in range, the right user is associated with it. This means that a MAC address could be spoofed but the malicious user would have to spoof the MAC address, be in the right location, and have the victim users QR code tickets. This would be good for situations where a user needs to be confirmed to be in a room that does not need any kind of supervision.
+
+\item GPS: GPS would would similar to Wi-Fi. The signal would have to be coming from a smartphone, and there would need to be a way of telling who was sending which GPS signal and it can happen automatically. It is not accurate indoors, so cannot be used to identify if a user is in a particular room.
+
+\item QR Code - User Scanned: When we need the user to prove they are in a particular room we can have them scan a room specific QR code which they scan after they have acquired their Kerberos ticket. The room specific code is combined with their ticket so that the the resource they are scanning their code at can see that they have both the rooms code and their ticket. This can be spoofable but if the room codes are changed enough then risk that they will be misused can be reduced.
+
+\item QR Code - Admin Scanned: Used when access is being given to high value resources. The only way a user can get access to these is through the admin scanning their QR code. The idea is that these are often used for short term meetings where access to the resources is as limited as possible. The benefit of the admin having to scan the code also means that a meeting can take place with the admin being selective about who is given access rights to the meetings resources.
+
+\end{itemize}
+
+
+\subsection{Optimisation of QR Codes}
+
+
+\subsection{Transfer of a Login Session Use Case}
+%TODO: Change to a footnote
+I am going to give a run through of my basic use case to show how a user’s ticket can be transferred from one machine to another using QR codes \cite{YouTubeDemo}. Though basic, this use case shows that it is possible for a Kerberos ticket to be transferred between machines using QR codes. In the demo for this use case the QR codes are displayed on the computer screen, but an implemented version of this with a phone could display those QR codes on the phones screen to have the same effect. The process of this use case is outlined below:
 
 \begin{itemize}
 	\item Both computer A and B have no Kerberos tickets, and therefore are unable to access the Apache server.
@@ -61,11 +85,15 @@ I am going to give a run through of my basic use case to show how a user’s tic
 	\item The tickets from computer A have now been transferred solely using QR codes as the primary means of communication.
 \end{itemize}
 
-In the future this use case would replace computer A with an Android smartphone, they would be able to scan their code on any computer running my QR code scanning program to get authenticate themselves and gain access to the services they are allowed to, such as the Apache server above.
+If this was created, the use case would be carried out in a very similar way, but with computer A being replaced with an Android smartphone. The user would enter their login details into their phone which would create the QR codes for them to scan at any of the accepting systems, authenticating themselves to that system.
 
+\subsection{Meeting Room Use Case}
+In this use case, there is a meeting room with particular resources that users in the meeting need to access. Access should be easy for those in the meeting, but difficult for those outside of the meeting. Users get access to the resources such as a shared file system and printer server by being in the meeting room group. Each meeting has an admin who scans users Kerberos ticket QR codes as they enter. When a user enters or leaves the meeting room their QR codes are scanned to show this transition, and as a result they will be added or removed from the meeting room group. Users within the room are able to all collaborate using the shared resources from any of their Kerberos enabled devices. If a malicious user has altered the files they must be in the room at the time they are doing it. Kerberos tickets for these resources have a short lifespan, but can be renewed without a password prompt until the end of meeting. This means users in the room will be able to collaborate for the entire duration, but their device will have to get a refreshed ticket from the KDC often. Each time the ticket is renewed the KDC and check to see that the user is still part of the meeting group, if they are not then it will simply not give them the ticket they need for the resources, preventing the user from accessing them furthur.
 
-\subsubsection{Difference From Aims and Objectives} 
-I originally planned for there to be more interaction with the phones sensors as a way of confirming the phone is in the same location as the scanned QR code. Instead of this I am now having all of the information coming from the QR codes. This puts less requirements on the sensors for anywhere my QR code scanning software is running, and makes the average user interaction faster because all they have to do is scan their QR code. GPS information is also not available indoors which limits its usefulness since all use cases will be performed indoors. Instead we are going to allow users to prove their location by scanning room specific QR codes which I feel is a good trade off between security and ease of use.
+Having Kerberos manage the users in the group means that the admin only needs to send the update to a single place. By doing it all in Kerberos also means that the users do not need access to the internet, only to the KDC.
+
+\subsection{Daily Room Access}
+In this use case there would be a lab group, this group represents people who have been to the lab on this day. Only people who have physically visited the lab have access to those labs resources. This could be put in place as a simple way of stopping users from sharing accounts. Each day the lab has a new QR code for users to scan, the QR code contains a symetrical cryptographic key for the user to scan with their Android application. When scanned, the users phone will encrypt their username with the key and send it to the KDC. The KDC attempts to decrypt their message with the days symetrical key, if it works then that user is added to the lab group, if it does not recognise the username it decrypted then it is discarded. The user group is restarted at the beginning of each day. By putting this measure in place it means that a users account details, and their phone must be compromised before a malicious user can access their account. Attempts to access an account which has not verified its presence for the day can be flagged to reduce the effectiveness of bruteforce password guessing.
 
 
 \section{Related Work}
@@ -79,12 +107,25 @@ This project uses QR codes to open doors \cite{QRRelated}. The QR code does not 
 
 My implementation differs from this because rather than storing an access key, the QR codes in my system store the TGT which could be used to get the user a login session at a computer as well as room access. Their system sends QR codes via email. If someone was able to perform a man in the middle on their mailserver they could gain access to every QR code emailed out.
 
-\section{What I've Achieved}
-\subsection{Meeting Room}
-I have created a proof of concept application that allows the restriction of resources to users who are present at a particular location. With my application 
+
+\section{Results}
+Here I'm going to show the output of my programs. The output looks very similar to how the sequence diagrams look, with each action generating a line saying what it is doing. After looking at the results I will then explain how this improves on a use case that does not have access to my application.
+
+\subsection{Meeting Room Results}
+The above is an executed version of the use case using the proof of concept programs I have made. The user starts outside of the meeting room, they try and get their ticket, and the ticket check fails and the ticket is deleted. Next it is similated that they enter the room by scanning their QR code, they are then put into the meeting room group. When they try to get their ticket next it the check passes, allowing them to keep their ticket. They then use this ticket to SSH into the printer and the fileserver. SSH in this case takes to place of the two Kerberos enabled services, in the real version the user would actually check that they can print and access the file server. The user then leaves the room, when the user tries to refresh their ticket the KDC sees that they are no longer in the room and removes their ticket.
 
 
 
+
+
+\section{Problems Encountered}
+Parts of the project did not go as planned. Overall this did not limit the knowledge that was gained from the project, but did end up reducing the progress that could have been made. Before work could be started on the project I needed to set up the Kerberos infrastruture. My unfamiliarity with it meant that it took longer than originally planned, but a lot was learnt about Kerberos and how it would fit into the scope of the project. After better researching the Android application it was deceided that it was better of to implement a proof of concept rather than creating an actual application. This is because it made testing much faster as everything was contained within VMs, and it also meant that different use cases could be quickly prototyped using command line programs without having to worry about creating a GUI on an unfamiliar platform.
+
+My checks to see if a ticket was valid all had to be client side. This is not optimal in a real system because it allows a malicious user to take their valid ticket before the check has taken place. Since my proof of concept assumes a non-malicious user it has not been a problem for my tests. Work on integrating it into MIT Kerberos would take a long time since it is a very large code base, so for my project I felt that showing how the system would work if implemented was enough.
+
+
+
+% Probably not needed anymore but handy for referencing 
 \section{Future Work}
 A big part of my project is coming up with ways the QR codes can be used and then implementing them. We have come up with some potential use cases, and this semester I am working out the specifics involved in the use cases and implementing them. I’m going to go through some of my considered use cases and work out any of the details. I also need to implement the Android application so that these use cases can be carried out in a portable manner.
 
@@ -108,5 +149,4 @@ I also want to allow a user to take their login session elsewhere using their ph
 \bibitem{QRRelated} LibeTech QR Code Door Lock, http://www.jeremyblum.com/portfolio/libetech/, 2014.
 \bibitem{YouTubeDemo} QR Code Proof of Concept, https://www.youtube.com/watch?v=v8ZZWC-jXeM\&list=UU3CfgH3Wtm0TTpxq0I92XFw, 2014.
 \end{thebibliography}
-
 \end{document}

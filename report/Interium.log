@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.7.16)  15 SEP 2014 11:19
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.7.16)  20 SEP 2014 21:38
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -220,42 +220,45 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 \tf@toc=\write3
 \openout3 = `Interium.toc'.
 
-Missing character: There is no ‚ in font cmr10!
-Missing character: There is no Ä in font cmr10!
-Missing character: There is no ò in font cmr10!
-Missing character: There is no ‚ in font cmr10!
-Missing character: There is no Ä in font cmr10!
-Missing character: There is no ô in font cmr10!
 
 [1
 
 ]
 Missing character: There is no ‚ in font cmr10!
 Missing character: There is no Ä in font cmr10!
+Missing character: There is no ò in font cmr10!
+Missing character: There is no ‚ in font cmr10!
+Missing character: There is no Ä in font cmr10!
 Missing character: There is no ô in font cmr10!
- <QRCodes.png, id=13, 564.1075pt x 181.67876pt>
+Missing character: There is no ‚ in font cmr10!
+Missing character: There is no Ä in font cmr10!
+Missing character: There is no ô in font cmr10!
+ [2] <QRCodes.png, id=16, 564.1075pt x 181.67876pt>
 File: QRCodes.png Graphic file (type png)
  <use QRCodes.png>
 Package pdftex.def Info: QRCodes.png used on input line 39.
 (pdftex.def)             Requested size: 256.0748pt x 82.47267pt.
- [2]
-Missing character: There is no ‚ in font cmr10!
-Missing character: There is no Ä in font cmr10!
-Missing character: There is no ô in font cmr10!
 
 [3 <./QRCodes.png>]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 57.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 62.
  (/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 57.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 62.
+Missing character: There is no ‚ in font cmr10!
+Missing character: There is no Ä in font cmr10!
+Missing character: There is no ô in font cmr10!
 
 [4]
 Missing character: There is no ‚ in font cmr10!
 Missing character: There is no Ä in font cmr10!
 Missing character: There is no ô in font cmr10!
- [5]
+ [5] [6]
+Missing character: There is no ‚ in font cmr10!
+Missing character: There is no Ä in font cmr10!
+Missing character: There is no ô in font cmr10!
+ [7]
 Missing character: There is no ‚ in font cmr10!
 Missing character: There is no Ä in font cmr10!
 Missing character: There is no ô in font cmr10!
@@ -265,39 +268,38 @@ Missing character: There is no ú in font cmr10!
 Missing character: There is no ‚ in font cmr10!
 Missing character: There is no Ä in font cmr10!
 Missing character: There is no ù in font cmr10!
- [6]
-Overfull \hbox (99.01523pt too wide) in paragraph at lines 107--108
+ [8]
+Overfull \hbox (99.01523pt too wide) in paragraph at lines 151--152
 []\OT1/cmr/m/n/10 Secure Web Au-then-ti-ca-tion with Mo-bile Phones, http://hom
 epages.mcs.vuw.ac.nz/ ian/shared/papers/secureweb.pdf,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 109--110
+Underfull \hbox (badness 10000) in paragraph at lines 153--154
 []\OT1/cmr/m/n/10 QR Code Proof of Con-cept, https://www.youtube.com/watch?v=v8
 ZZWC-
  []
 
-[7
+[9
 
 ] (./Interium.aux) ) 
 Here is how much of TeX's memory you used:
- 2172 strings out of 495028
- 30850 string characters out of 6181497
- 93750 words of memory out of 5000000
+ 2171 strings out of 495028
+ 30837 string characters out of 6181497
+ 94750 words of memory out of 5000000
  5368 multiletter control sequences out of 15000+600000
- 8501 words of font info for 30 fonts, out of 8000000 for 9000
+ 8193 words of font info for 29 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 38i,6n,23p,1197b,218s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 38i,6n,23p,1221b,218s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
-cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmb
-x12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb
-></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/
-share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/t
-exlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on Interium.pdf (8 pages, 135469 bytes).
+cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr
+10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb>
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/s
+hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
+Output written on Interium.pdf (10 pages, 130410 bytes).
 PDF statistics:
- 56 PDF objects out of 1000 (max. 8388607)
- 38 compressed objects within 1 object stream
+ 58 PDF objects out of 1000 (max. 8388607)
+ 39 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  6 words of extra memory for PDF output out of 10000 (max. 10000000)
 

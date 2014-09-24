@@ -24,23 +24,21 @@ In this report I am going to give an overview of my infrastructure, explain what
 Kerberos \cite{Kerb} is a computer network authentication protocol which allow nodes to prove their identity to one another in a secure way. It uses ‘tickets’ as its mechanism to prove identity, a valid user will have a ticket to give to the service they wish to access. Kerberos allows both the user and the server to identify each other. When a user logs into the Kerberos key distribution center (KDC) they are given a ticket granting ticket (TGT). The TGT is presented by the user when they wish to access a restricted service, if the service accepts the user's TGT they will be given a ticket specific to the service when they can then use to access it securely. Kerberos is single sign on meaning that once a user gets their TGT, they will not need to login again until it expires.
  
 \subsection{QR Codes}  
-A QR, or Quick Response code \cite{QR} is a specially formatted image which is designed to be quickly read by a camera. QR codes come in a variety of versions, a version refers to how many rows and columns there are in the code, a high version code is going to be able to store more information, but will also be harder to read. QR codes store data using one of four different modes: numeric only, alphanumeric, byte/binary (ISO8859-1), and kanji. The mode affects how many characters can be stored within the QR code e.g. A numeric only code will be able to store more than the alphanumeric code.
-
-\subsection{Research}
-%remote authentication usually uses smart cards or a mobile phone with QR codes
-There has been a bit of work done in regards to using QR codes for authentication or authorization, but they take a different approach to mine. Often their focus is in creating a one time pass. The focus of my project is more around the use of short term codes, rather than single use codes.
-
-% cite some sources
-
-\section{Considerations} 
-\subsection{QR Code Versions}
-When there are many tickets to encode it will take multiple QR codes to store all of the information. It is important that users do not feel inconvenienced by this, so the right QR code version needs to be used which is fast to scan and uses minimal codes. Picking the right QR code version is quite difficult because there are many factors to consider: screen size, pixel density, and camera quality when scanning the QR codes. A ticket can easily fit into a version 40 QR code, but it is very hard for a scanner to read it, especially when the QR code is displayed on a screen with low resolution. Tickets around version 20 can be reliably and quickly scanned, but this does not mean they are the ideal. I will be performing some tests in semester 2 to find the ideal code version so I can use minimal QR codes, and still have them easy to scan.
+A QR, or Quick Response code \cite{QR} is a specially formatted image which is designed to be quickly read by a camera. QR codes come in a range of versions, a version refers to how many rows and columns there are in the code, a high version code is going to be able to store more information, but will also be harder to read. QR codes store data using one of four different modes: numeric only, alphanumeric, byte/binary (ISO8859-1), and kanji. The mode affects how many characters can be stored within the QR code e.g. A numeric only code will be able to store more than the alphanumeric code.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=9cm]{QRCodes.png}
 \caption{QR code versions 10, 20, and 40 respectively.}
 \end{figure}
+
+\subsection{Research}
+%SmartCards http://isrc.ccs.asia.edu.tw/www/myjournal/P013.pdf
+%remote authentication usually uses smart cards or a mobile phone with QR codes
+Work done in areas similar to mine have often had a slightly different focus. Before the prevalence of smartphones the focus was largely around the use of smartcards. \cite{SmartCards} A user would carry a smartcard with them which could be used to prove their identity to a computer before they entered their password. This is similar to how my system is going to work, but because my system uses a smartphone it is able to take advantage of the full range of features a smartphone can provide such as GPS, screen, and keyboard.
+
+There has also been work done in regards to using QR codes for authentication. Like mine, these methods use QR codes to authenticate a user, but tend to have more of a focus on use as a one time pass. My system has Kerberos intergrated into the smartphone. This means that a user is able to log into their account and generate a QR code using their Kerberos ticket. The systems I have seen 
+% cite some sources
 
 \section{My Progress}
 \subsection{Infrastructure} 
@@ -56,9 +54,12 @@ Unfortunately QR codes do not have support direct binary encoding, this means th
 Dynamic grouping of users is a concept which is used in two of my use cases. The idea is that a Kerberos enabled network has a set of groups with exclusive access to particular resources. A user needs to be a member of the group controling the resources before they are given access. Groups can be long lasting, but in my use cases I have designed them to be set up for short term interactions where users are given access to some resources for short periods to furfull a particular goal such as collaboration. At the end of the interaction e.g. working day or meeting, the group is cleared so that each time that group is used it has a fresh start and prevents users from accessing the resources outside of the intended times. Users are added to the group when they meet certain conditions e.g.\ they are in the meeting. Kerberos lacks native group control, so needs to be implemented by the service using Kerberos. My proposed system puts group support into Kerberos, then uses that to control when users can access particular resources. By having group support directly in Kerberos it creates a single point that needs to be changed, rather than having each resource controlling its own group independently.
 %need to mention that there is no build in support for Kerberos groups at the moment
 
-The idea of a dynamic group is that the user must perform an action which will get them added to the group, once they are in the group they have access to that groups resources, but will lose them again once they leave the group. How a user is added to a group can be done a number of different ways that I will go into shortly. Groups can be set up for meetings so that the users can access shared resources for the duration of the meeting, or could be used to ensure that the user can only log into a computer if they are in the room. By having these restrictions there is reduced risk of the users account, or resources being abused by a malicious user.
+The point of the dynamic groups is that it gives the KDC a point of reference to see which users are currently meeting a certain condition. The condition could be a range of things, but in the case of my use cases they reflect the users location. The groups are designed for users to be added and removed from them frequently which differs from how groups usually operate in a Unix like system, where groups are infrequently added to or removed from. The group can be put in place for long term or short term activities depending on the resources a group is being given access to. A short term group can be set up for meetings so that anyone in the meeting gains access to a shared file system and printer so they can collaborate. A long term group could be set up for something like door access, you only want particular users to be able to open a certain door using their QR code.
+
+%The idea of a dynamic group is that the user must perform an action which will get them added to the group, once they are in the group they have access to that groups resources, but will lose them again once they leave the group. How a user is added to a group can be done a number of different ways that I will go into shortly. Groups can be set up for meetings so that the users can access shared resources for the duration of the meeting, or could be used to ensure that the user can only log into a computer if they are in the room. By having these restrictions there is reduced risk of the users account, or resources being abused by a malicious user.
 
 There are many ways of saying if a user is in the room or not, all are fit for different situations. The three main ways considered are: locating the user with Wi-Fi, GPS, and scanning of QR codes which will come in two forms; codes scanned an admin, and codes scanned by the user.
+
 \begin{itemize}
 
 \item Wi-Fi: It is possible to triangulate a user’s position using multiple Wi-Fi routers. As long as the user is connected to the systems Wi-Fi then their position can be worked out within X meters, which means that the system would be able to detect which room a user is in. The problem with this system is that it requires Kerberos to be integrated with the routers. It also means there needs to be a database of MAC addresses so that when a device is in range, the right user is associated with it. This means that a MAC address could be spoofed but the malicious user would have to spoof the MAC address, be in the right location, and have the victim users QR code tickets. This would be good for situations where a user needs to be confirmed to be in a room that does not need any kind of supervision.
@@ -73,7 +74,9 @@ There are many ways of saying if a user is in the room or not, all are fit for d
 
 
 \subsection{Optimisation of QR Codes}
-The amount of information the QR codes can store varies a lot depending on the version. Kerberos tickets can be quite large so efficient storage is important so that we can reduce the amount of QR codes it takes to store the users ticket. The problem is that the higher the QR code version used, the harder it will be for a camera to scan each ticket. We can easily encode a whole ticket into a single QR code, but the resulting QR code is almost impossible for a basic camera to read. After performing some basic tests I was able to find a QR code version that allowed me to store the most information per code, while also 
+%todo actually get the version that was good
+%todo reference 
+The amount of information the QR codes can store increases as the version does. Kerberos tickets can be quite large so efficient storage is important. The amount of QR codes required to store the tickets needs to be small, but the speed and ease of scanning the QR codes also need to be taken into account. A high version code will store a lot, but it will also be hard to read. We can easily encode a whole ticket into a single QR code, but the resulting QR code is impractical to read, and impossible for a low resolution screen to display correctly. After performing some basic tests I was able to find a QR code version that allowed me to store the most information per code, while also being fast to read. Based on the size of my Kerberos TGT of X bytes, it would take X QR codes to encode it, each being scanned within a second by my smartphone.
 
 
 \subsection{Transfer of a Login Session Use Case}
@@ -123,7 +126,12 @@ This is a use case that would be quite difficult without the intergration of gro
 \subsection{Proximity to Access Results}
 In these results you can see what a user would expect to happen when they are using the system. To begin with the user is out of range, they then enter the area and it is shown that they are added into the dynamic group, next they try and get a ticket which they are granted because they are in the correct area they are granted the ticket. They then use the ticket to login and access the file server. They then log out and leave the area, removing them from the dynamic group. Next, a malicious user who knows that users details tries to login, when the check runs it sees that the user is not in the proximity of the building, so it can not be them logging in at this time, the KDC is able to make a note of this which can be forwarded to both the admin of the KDC and the user who's account has been compromised.
 
-This use case showcases a lot of what the system would be capable of. It stops malicious users from trying to access accounts when the real user is away, and can keep track of login attempts for an account that should not be occuring. A user whos account is being accessed can be notified using the Android application allowing them to take action against the malicious user.
+With this in place users are safe knowing that the only time someone can be on their account is when they are in the area. Any attempts to log into their account while they are away will generate a notification on their phone so they are aware of when they could be the target of a malicious user.
+
+\subsection{How it Fits Together}
+Above I have showcased how three different parts of the system could work. By combining these parts together it allows you to create a secure network with tight controls around users access to resources. It allows the user the security of never having to enter their password directly onto a computer because they can enter it into their phone and then use the QR codes on the phone to log them in by scanning it on the computer. This prevents them from keyloggers, the prevalence of Kerberos in the system also means that if an attack was to aquire the users ticket then they will only be able to use it for as long as the ticket is valid. By having them on smartphones it means that renewing a ticket is not very much effort for the user, so short ticket times are realistic.
+
+%short ticket times, hard to steal QR codes, protect for resources using dynamic grouping for meetings, protection for users using the GPS stuff
 
 
 \section{Problems Encountered}

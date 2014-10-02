@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.7.16)  1 OCT 2014 17:32
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.7.16)  2 OCT 2014 15:07
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -228,36 +228,36 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 [1
 
 ]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 32.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 30.
  (/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 32.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 30.
  [2]
 <QRCodes.png, id=17, 564.1075pt x 181.67876pt>
 File: QRCodes.png Graphic file (type png)
  <use QRCodes.png>
-Package pdftex.def Info: QRCodes.png used on input line 59.
+Package pdftex.def Info: QRCodes.png used on input line 72.
 (pdftex.def)             Requested size: 256.0748pt x 82.47267pt.
- [3 <./QRCodes.png>] [4]
+ [3] [4 <./QRCodes.png>] [5]
 Missing character: There is no â in font cmr10!
 Missing character: There is no € in font cmr10!
 Missing character: There is no ™ in font cmr10!
- [5]
+ [6]
 Missing character: There is no â in font cmr10!
 Missing character: There is no € in font cmr10!
 Missing character: There is no ™ in font cmr10!
- [6] <Meeting.png, id=35, 819.06pt x 440.64626pt>
+ [7] <Meeting.png, id=38, 819.06pt x 440.64626pt>
 File: Meeting.png Graphic file (type png)
 
 <use Meeting.png>
-Package pdftex.def Info: Meeting.png used on input line 152.
+Package pdftex.def Info: Meeting.png used on input line 167.
 (pdftex.def)             Requested size: 426.79134pt x 229.61475pt.
- [7] [8 <./Meeting.png>] [9] [10] (./Interium.bbl [11])
-[12
+ [8 <./Meeting.png>] [9] [10] (./Interium.bbl [11]) [12
 
-] (./Interium.aux) ) 
+]
+(./Interium.aux) ) 
 Here is how much of TeX's memory you used:
  2252 strings out of 495028
  31824 string characters out of 6181497
@@ -266,17 +266,17 @@ Here is how much of TeX's memory you used:
  8707 words of font info for 31 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  38i,7n,23p,1209b,255s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
-cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr
-10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb>
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/s
-hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/tex
-live/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/tex
-mf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/
-fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/
-type1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/
-public/amsfonts/cm/cmtt10.pfb>
-Output written on Interium.pdf (13 pages, 224272 bytes).
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm
+/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10
+.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></
+usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/sha
+re/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texli
+ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf
+-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fo
+nts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/ty
+pe1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmtt10.pfb>
+Output written on Interium.pdf (13 pages, 226540 bytes).
 PDF statistics:
  89 PDF objects out of 1000 (max. 8388607)
  61 compressed objects within 1 object stream

@@ -1,22 +1,22 @@
 \contentsline {section}{\numberline {1}Introduction}{1}
 \contentsline {section}{\numberline {2}Background}{2}
 \contentsline {subsection}{\numberline {2.1}Kerberos}{2}
-\contentsline {subsection}{\numberline {2.2}QR Codes}{3}
-\contentsline {section}{\numberline {3}Research}{3}
-\contentsline {subsection}{\numberline {3.1}Smart Cards}{3}
+\contentsline {subsection}{\numberline {2.2}QR Codes}{4}
+\contentsline {section}{\numberline {3}Research}{4}
+\contentsline {subsection}{\numberline {3.1}Smart Cards}{4}
 \contentsline {subsection}{\numberline {3.2}QR Codes on Mobile Phones}{4}
-\contentsline {section}{\numberline {4}My Progress}{4}
-\contentsline {subsection}{\numberline {4.1}Infrastructure}{4}
-\contentsline {subsection}{\numberline {4.2}Dynamic Grouping of Users}{5}
-\contentsline {subsection}{\numberline {4.3}Optimisation of QR Codes}{6}
-\contentsline {subsection}{\numberline {4.4}Transfer of a Login Session Use Case}{6}
+\contentsline {section}{\numberline {4}My Progress}{5}
+\contentsline {subsection}{\numberline {4.1}Infrastructure}{5}
+\contentsline {subsection}{\numberline {4.2}Dynamic Grouping of Users}{6}
+\contentsline {subsection}{\numberline {4.3}Optimisation of QR Codes}{7}
+\contentsline {subsection}{\numberline {4.4}Transfer of a Login Session Use Case}{7}
 \contentsline {subsection}{\numberline {4.5}Meeting Room Use Case}{8}
 \contentsline {subsection}{\numberline {4.6}Proximity to Resources}{9}
 \contentsline {section}{\numberline {5}Related Work}{9}
 \contentsline {subsection}{\numberline {5.1}Web Authentication Using A Mobile Phone}{9}
-\contentsline {subsection}{\numberline {5.2}QR Code Based Door Access}{9}
+\contentsline {subsection}{\numberline {5.2}QR Code Based Door Access}{10}
 \contentsline {section}{\numberline {6}Results}{10}
 \contentsline {subsection}{\numberline {6.1}Meeting Room Results}{10}
-\contentsline {subsection}{\numberline {6.2}Proximity to Access Results}{10}
+\contentsline {subsection}{\numberline {6.2}Proximity to Access Results}{11}
 \contentsline {subsection}{\numberline {6.3}How it Fits Together}{11}
 \contentsline {section}{\numberline {7}Problems Encountered}{11}

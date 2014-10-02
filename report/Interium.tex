@@ -22,9 +22,7 @@ In this report I am going to look at similar systems that have been created, giv
 
 \section{Background}    
 \subsection{Kerberos}
-%todo: look at that paper I found that talks about kerb really good, talk about ticket renewal
 %todo show a diagram on how Kerberos authentication works
-%Kerberos \cite{Kerb} is a computer network authentication protocol which allow nodes to prove their identity to one another in a secure way. It uses ‘tickets’ as its mechanism to prove identity, a valid user will have a ticket to give to the service they wish to access. Kerberos allows both the user and the server to identify each other. When a user logs into the Kerberos key distribution center (KDC) they are given a ticket granting ticket (TGT). The TGT is presented by the user when they wish to access a restricted service, if the service accepts the user's TGT they will be given a ticket specific to the service when they can then use to access it securely. Kerberos is single sign-on meaning that once a user gets their TGT, they will not need to login again until it expires.
 Kerberos \cite{Kerb} is a computer network authentication protocol which allow nodes to prove their identity to one another in a secure way. Any entities within the Kerberos system are known as principals. A principal refers to either a user accessing the network from a workstation, or a network service running on a host. Principals are contained in network groups called realms. Each realm is controlled by two servers which are the ticket granting server (TGS) and the authentication server (AS). Usually these two servers will be contained on the same host which is known as the key distribution center (KDC).
 
 When a user wants to access a service principal on the network they will need a ticket for that principal which shows they are allowed access it. The negotiation of tickets is done using the ticket granting ticket (TGT) the user gets by authenticating themselves to the AS. This will happen in a few steps, and if successful will result in the user getting a TGT from the TGS. The TGT is used to negotiate additional tickets without the user needing to re-enter their password. To begin with the user sends the AS a plaintext message containing their user ID, the TGS ID, their IP address, and the lifetime they want to have for the ticket. The IP address can be left null if the user wants to allow the ticket to be used from any machine. The AS will check the user is in the database, and if they are will randomly generate a TGS session key which is used for encryption between the user's machine and the TGS. It then sends back two messages to the user:
@@ -45,23 +43,37 @@ When the user needs a ticket for a particular service prinicipal it will send tw
 The TGS will check the database to see if the requested service principal exists. If is does, the users TGT is decrypted using the TGS's secret key, then the Authenticator is decrypted using the session key contained in the TGT. Now that the TGS has the decrypted messages it will do a series of things: check the user ID from the Authenticator matches the TGT, make sure the timestamp of the Authenticator is within two minutes of the TGT, make sure the TGT is not expired, check to see that the Authenticator is not in the cache (this would indicate a replay attack), and check the IP address matches the source's IP address. If any of these checks fail then the user is sent the corrosponding error message. If successful then the TGS will generate a service session key, and send the user two messages:
 
 \begin{itemize}
-\item Message E: The service ticket for the principal. It contains the user ID, the service name, the users network address if it was given in message B, a timestamp, the valid time for the ticket, and the service session key. This message is encrypte using the service's secret key.
+\item Message E: The ticket for the service principal. It contains the user ID, the service name, the users network address if it was given in message B, a timestamp, the valid time for the ticket, and the service session key. This message is encrypted using the service's secret key.
 \item Message F: This message contains the principal service name, a timestamp, the validity time, and the principal services's session key. It is encrypted using the TGS session key.
 \end{itemize}
 
-The user's workstation decrypts message F using the TGS session key it obtained earlier, it now has access to the principal service's session key. Similarly to the TGT, the service ticket cannot be decrypted by the user because it was encrypted using that service's secret key.
+The user's workstation decrypts message F using the TGS session key stored in the ticket cache, and now has access to the principal service's session key. Similarly to the TGT, the ticket for the service principal cannot be decrypted by the user because it was encrypted using that service's secret key. Now when the user goes to use the service, they use the service principal's ticket.
+
+The workstation now has enough information to authenticate the client to the service principal. The workstation sends two messages to the principal:
+\begin{itemize}
+\item Message E: The still encrypted ticket for the service principal received from the TGS in the previous step.
+\item Message G: Another Authenticator this is encrypted using the service principal session key and contains: the user's ID, and a timestap.
+\end{itemize}
+The service then decrypts the ticket using its secret key so that it can obtain the service session key. The session key is then used to decrypt the Authenticator, and use its contents to check everything is valid in the following ways: checks that the user ID in the two messages match, checks that the messages timestamps are within 2 minutes of each other, checks the ticket is not expired, checks the Authenticator is not already in the cache (to prevent replay attacks), and checks the source IP address is the same as your network address if the field is not null. If any of these checks do not pass then the service will respond with an error. If they pass it will send the user:
+\begin{itemize}
+\item Message H: an Authenticator for the service, which just contains the timestamp sent by the user incremented by one. This is encrypted using the service principal session key.
+\end{itemize}
+
+The user decrypts message H and checks that the timestamp has been updated correctly. If this is the case then a trust relationship has now been established between the user and the server, allowing the user to make service requests and have them reciprocated for the duration of the ticket lifetime.
+
+Maximum lifetime of tickets is set in the KDC. Any ticket requests with a larger lifetime than the maximum will be set to the maximum value. Tickets can also be given renewal times, where a user contacts the KDC again with their old ticket and are given a new ticket with a new lifetime but without needing to input their password. Different principals can have different maximum lifetimes.
 
 
 
 \subsection{QR Codes}
 %TODO talk about error correction and how it isn't really needed in my project since the QR codes aren't printed so there is no chance of part of the code being destroyed
-A QR, or Quick Response code \cite{QR} is a specially formatted image which is designed to be quickly read by a camera. QR codes come in a range of versions, a version refers to how many rows and columns there are in the code, a high version code is going to be able to store more information, but will also be harder to read. QR codes store data using one of four different modes: numeric only, alphanumeric, byte/binary (ISO8859-1), and kanji. The mode affects how many characters can be stored within the QR code e.g. A numeric only code will be able to store more than the alphanumeric code.
-
 \begin{figure}[H]
 \centering
 \includegraphics[width=9cm]{QRCodes.png}
 \caption{QR code versions 10, 20, and 40 respectively.}
 \end{figure}
+
+A QR, or Quick Response code \cite{QR} is a specially formatted image which is designed to be quickly read by a camera. QR codes come in a range of versions, a version refers to how many rows and columns there are in the code, a high version code is going to be able to store more information, but will also be harder to read. QR codes store data using one of four different modes: numeric only, alphanumeric, byte/binary (ISO8859-1), and kanji. The mode affects how many characters can be stored within the QR code e.g. A numeric only code will be able to store more than the alphanumeric code. QR codes can be given error correction so if they can still be read if parts of the code are missing, but because parts of the code are just there for error correction it will reduce the total amount of information that can be stored in the code.
 
 \section{Research}
 \subsection{Smart Cards}
@@ -90,18 +102,18 @@ I am using Kerberos because it is runs on all popular operating systems and has 
 In my project QR codes are going to be used as a primary communication channel between the user and their services. QR codes are a good option because they are easy to use, and hard to perform a man in the middle attack on. The malicious user would have to get a copy of all the user's QR codes before they could use them themselves. Getting a copy of the user's QR codes is especially difficult because a wise user would only ever have their QR codes on screen when they need to use them. Even if a user does end up accidently giving away a QR code, their attack will need the complete set of QR codes before they can actually use them in an attack.
 
 %TODO change to the right thing
-Unfortunately QR codes do not have support direct binary encoding. This means that Kerberos tickets (which are stored in binary) need to be converted to an alphanumeric format before being encoded. This means that before a ticket is encoded into a QR code it is first converted into base64. 
+Unfortunately QR codes do not have support direct binary encoding. This means that Kerberos tickets (which are stored in binary) need to be converted to an alphanumeric format before being encoded. This means that before a ticket is encoded into a QR code it is first converted into base64. This reduces the amount of useable space but is nessicary if I want the information to be encoded correctly into the the QR codes.
 
 \subsection{Dynamic Grouping of Users}
 Dynamic grouping of users is a concept which is used in two of my use cases. The idea is that a Kerberos enabled network has a set of groups who each have access to particular resources. A user needs to be a member of the group controlling the resources before they are given access. These groups can be set up to last indefinitely, or for short periods of time. The reason you may want to have a short term group is if you want resources protected for a majority of the time, but then open them up to users in a controlled way e.g.\ allowing users to use the meeting room printer for the duration of a meeting.
 
 %TODO Which service?
-Users are added to the group when they meet certain conditions e.g.\ they are near the resources, or they are part of a collaboration. Kerberos lacks native group control, so needs to be implemented by the service. My proposed system puts group support into Kerberos, so that there is a single control point for the groups, rather than each of the resources having to manage their own groups individually.
+Users are added to the group when they meet certain conditions e.g.\ they are part of a collaboration, or they are in a particular room. Kerberos lacks native group control, so this currently needs to be implemented by the service. My proposed system puts group support into Kerberos. This makes a a single control point for the groups, rather than each of the resources having to manage their own groups individually. Services will be part of certain groups which is how users will get access to them.
 
-The point of the dynamic groups is that it gives the KDC a point of reference to see which users are currently meeting a certain condition, and thus are allowed to use particular resources. The condition could be anything, but in my use cases they reflect the user's location. By having this conditional access protecting resources it gives more control than traditional Kerberos would offer, it makes it harder for malicious users to abuse controlled resources because they need their, or the person who's account they have hijacked need to be meeting the condition before they can cause any harm.
+The point of the dynamic groups is that it gives the KDC a point of reference to see which users are currently allowed to use certain resources. A range of methods can be used to deceide whether or not a user is in a group. Having group support in Kerberos gives the system administrator more control over when resources can be accessed, and makes it harder for malicious users to abuse controlled resources because the account they are using needs to be in the correct group before they can access the service they wish to exploit.
 
 %TODO clarify what is meant by scanning of QR codes.
-There are many ways of saying where a user is, each fit for different situations. The three main ways considered are: locating the user with Wi-Fi, GPS, and scanning of QR codes which will come in two forms; user QR codes scanned by an admin, or QR codes scanned by the user.
+There are many ways of saying where a user is, each fit for different situations. The three main ways I have looked at are: locating the user with Wi-Fi, GPS, and scanning of QR codes either by a user or an admin.
 
 \begin{itemize}
 
@@ -112,42 +124,39 @@ There are many ways of saying where a user is, each fit for different situations
 \item GPS: GPS would would similar to Wi-Fi. The signal would have to be coming from a smartphone, and there would need to be a way of telling who was sending which GPS signal and it can happen automatically. It is not accurate indoors, so cannot be used to identify if a user is in a particular room. Another problem is that GPS can be easily spoofed. To be sure that the signal is correct, users of the system would need to be issued a GPS tracker which would synchronize directly with the KDC. By using the tracker the KDC knows it can trust the signal coming from it.
 
 %TODO explain how the QR code would be combined
-\item QR Code---User Scanned: When we need the user to prove they are in a particular room we can have them scan a room-specific QR code after they have acquired their Kerberos ticket. The room-specific code is combined with their ticket so that the the resource they are scanning their code at can see that they have both the rooms code and their ticket. This can be spoofable but if the room codes are changed enough then risk that they will be misused can be reduced.
+\item QR Code---User Scanned: When we need the user to prove they are in a particular room we can have them scan a room-specific QR code after they have acquired their Kerberos ticket. The room-specific code and the user's ID are encrypted using the TGS session key the user has in their creditials cache and sent to the KDC. If the KDC can decrypt it the user is added to that rooms dynamic group.
 
-\item QR Code---Admin Scanned: Used when access is being given to high value resources. The only way a user can get access to these is through the admin scanning the users QR code. The application run by te admin checks the ticket is valid and if it is then adds the user to the dynamic group they are managing. The idea is that this method is used for shortterm meetings where access to the resources needs to be as limited as possible. The benefit of the admin having to scan the code also means that a meeting can take place with the admin being selective about who is given access rights to the meeting's resources.
+\item QR Code---Admin Scanned: Used when access is being given to high value resources. The only way a user can get access to these is through the admin scanning the users QR codes. The application run by the admin checks with the KDC to see that the user's ticket cache is valid, if it is then it sends a message to the KDC telling it to add the user's user ID to the rooms dynamic group. The idea is that this method is used for short term meetings where access to the resources needs to be as limited as possible. The benefit of the admin having to scan the code also means that a meeting can take place with the admin being selective about who is given access rights to the meeting's resources. The problem with this method is that the user's creditial cache is being stored on the admin's phone, which could be abused if the admin is malicious. This is a nessicary risk, because a system with a malicious admin is likely to be conpromised anyway.
 
 \end{itemize}
 
-
-\subsection{Optimisation of QR Codes}
+\subsection{Conversion from Ticket Cache to QR Codes}
+%todo talk about how the ticket cache is converted to QR codes, encoded in base64 then encoded into tickets after splitting it up and appending the numbers
 %todo actually get the version that was good
 %todo reference
 The amount of information the QR codes can store increases as the version does. Kerberos tickets can be quite large so efficient storage is important. The amount of QR codes required to store the tickets needs to be small, but the speed and ease of scanning the QR codes also need to be taken into account. A high version code will store a lot, but it will also be hard to read. We can easily encode a whole ticket into a single QR code, but the resulting QR code is impractical to read, and impossible for a low resolution screen to display correctly. After performing some basic experiments I was able to find a QR code version that allowed me to store the most information per code, while also being fast to read. Based on the size of my Kerberos TGT of X bytes, it would take X QR codes to encode it, each being scanned within a second by my smartphone giving a total scan time of X.
 
 
 %TODO get a better name
-\subsection{Transfer of a Login Session Use Case}
-%TODO sort out the footnote
-I am going to give a run through of my basic use case to show how a user’s ticket can be transferred from one machine to another using QR codes \footnotemark{YouTubeDemo}. In the demo for this use case the QR codes are displayed on the demo computer's screen, but an implemented version of this with a phone could display those QR codes on the phone's screen to have the same effect. The process of this use case is outlined below:
-
+\subsection{Transfer of a Login Session}
+Here I show how a user can transfer their ticket cache using my system \footnotemark. The best way to do this is to convert the cache to QR code form when the cache contains only the TGT. This is to ensure that the ticket cache is as small as possible. In the demo for this use case the QR codes are displayed on the demo computer's screen, but they could be displayed on a phone's screen and have the same effect. The process of this use case is outlined below:
 
 \footnotetext{https://www.youtube.com/watch?v=v8ZZWC-jXeM\&list=UU3CfgH3Wtm0TTpxq0I92XFw}
 
 \begin{itemize}
     \item Both computer A and B have no Kerberos tickets, and therefore are unable to access the Apache server.
-    %todo type set kinit \texttt
     %todo rewrite ticket as principl
     %todo talk about how the number is used to keep track of ticket order
     \item Computer A runs \texttt{kinit} which is a command line program used to authenticate a user to the Kerberos KDC and get their TGT. They enter their details and are given their TGT. They can then use this ticket to negotiate a ticket for the Apache server, granting them access to its resources.
-    \item Computer A then runs the QR code creating program. The program takes the TGT from the ticket cache (the location Kerberos tickets are stored) and converts it to base64, it then takes the base64 text and splits it into small sections. Each of those sections are then encoded into a QR code with a number used to identify the order of the QR codes so they can be reassembled.
+    \item Computer A then runs the QR code creating program. The program converts the ticket cache (the location Kerberos tickets are stored) to base64, it then takes the base64 text and splits it into small sections. Each of those sections are then encoded into a QR code with a number used to identify the order of the QR codes so they can be reassembled.
     %todo: talk about how it is stored into a file in tmp
-    \item Computer B, which is running the QR code scanning software, scans each of the QR codes created by Computer A. When all the codes are decoded they are reassembled using the ordering numbers from before, converted back to binary, and then added to the Kerberos ticket cache. Computer B is now able to use the TGT just as Computer A could before. In this case it uses it to negotiate access to the Apache server.
+    \item Computer B, which is running the QR code scanning software, scans each of the QR codes created by Computer A. When all the codes are decoded they are reassembled using the ordering numbers from before, converted back to binary, and placed in the default location for the Kerberos ticket cache. Computer B is now able to use the ticket cache just as Computer A could before. In this case it uses it to negotiate access to the Apache server.
     \item The tickets from computer A have now been transferred using QR codes as the primary means of communication.
 \end{itemize}
 
-If this was created, the use case would be carried out in a very similar way, but with computer A being replaced with an Android smartphone. The user would enter their login details into their phone which would create the QR codes for them to scan at any of the accepting systems, authenticating themselves to that system.
+If this was created, the use case would be carried out in a very similar way, but with computer A being replaced with an Android smartphone. The user would enter their login details into their phone which would create the QR codes for them to scan at any of the accepting systems, adding their ticket cache to that system and authenticating them.
 
-This use case shows some functionality which is very important in the system, it shows that a user can get their Kerberos ticket onto any computer running my program which decodes them and puts them into the ticket cache. If a user takes advantage of this for every login then the only place they have to enter their password is on their phone. This protects them from common attacks like keyloggers.
+This use case shows some functionality which is very important in the system, it shows it is possible for a user to transfer their ticket cache from one machine to another using QR codes. If a user takes advantage of this for every login then the only place they have to enter their password is on their phone. This protects them from common attacks like keyloggers. The downside of this method is that a user gives their ticket cache to the machine for this to work. A machine with a trojan could steal the users ticket cache. Though this is not ideal, it at least means that the malicious user can take advantage of the tickets for their lifetime, and still does not have access to a users password.
 
 \subsection{Meeting Room Use Case}
 \begin{figure}[H]
@@ -156,11 +165,11 @@ This use case shows some functionality which is very important in the system, it
 \caption{Meeting room sequence diagram.}
 \end{figure}
 %TODO explain the role of the delegated admin better.
-In this use case, there is a meeting room with particular resources that users in the meeting need to access. Access should be easy for those in the meeting, but difficult for those outside of the meeting. Users get access to resources such as a shared directory and a printer by being in the meeting room. Each meeting has an admin who scans a user's QR codes so that the change in the user's location can be reflected in the dynamic group. The meeting's shared directory needs to be protected, which is why the admin is the only person able to add or remove people from the group.
+In this use case, there is a meeting room with particular services that users in the meeting need to access. Access should be easy for those in the meeting, but difficult for those outside of the meeting. Users get access to services such as a shared directory and a printer by being in the meeting room. Each meeting has an admin who scans a user's QR codes so that the change in the user's location can be reflected in the dynamic group. The meeting's services need to be protected, which is why the admin is the only person able to add or remove people from the group.
 
 For each meeting group there is a ranked subgroup of possible admins who are in the meeting. If current meeting admin has to leave the meeting then the admin role is taken over by the next highest ranked admin in that subgroup. This allows deletegation of admin to continue as long as one possible admin remains in the meeting for its duration. The group is also protected in that if no admin exists in the group then it is cleared, preventing further access to resources.
 
-Kerberos tickets for these resources have a short lifespan, but have a long renewal time. This means that the user's phone will have to periodically contact the KDC to get a new ticket. Each time a new ticket is received the KDC does a check to make sure the user is still in the meeting room. If the KDC cannot see that the user is in the room then it will not give them the new ticket. Renewal of the ticket does not require reentering of the password, so a user will not be inconvenienced, but it does mean that they will only be able to collaborate for as long as they are in the room. By running a meeting in this way the admin knows that only users who are physically present in the meeting can collaborate. When the meeting is over the admin clears the group so users can no longer access the resources.
+Kerberos tickets for these resources have a short lifespan, but have a long renewal time. This means that the user's phone will have to periodically contact the KDC to get a new ticket. Each time a new ticket is received the KDC does a check to make sure the user is still in the meeting room. If the KDC cannot see that the user is in the room then it will not give them the new ticket. Renewal of the ticket does not require reentering of the password, so a user will not be inconvenienced, but it does mean that they will only be able to collaborate for as long as they are in the room. By running a meeting in this way the admin knows that only users who are physically present in the meeting can collaborate. When the meeting is over, or there are no possible admins left in the meeting the group is cleared, preventing furthur access from users.
 %todo change the last sentence
 
 
@@ -169,18 +178,6 @@ We want users to only be able to use resources if they are actually in close pro
 
 The problem with this use case is that the user's GPS can not always be trusted, some versions of Android built around privacy are made to send incorrect GPS signals. To remedy this users can have a trusted device with them for the sole purpose of reporting their GPS signal. This means we can trust the GPS signal we are getting, but does also mean an increase in cost to the user. The GPS signal is weak indoors so can not be used to show that a user is in a particular room, but will be sufficient to show that a user is in or near the building. This system also has to assume that the signal is received when the user enters the area, if this goes wrong a user could be considered out of the area when they should not be, or vice versa.
 %TODO make a better finish to this section
-
-
-\section{Related Work}
-\subsection {Web Authentication Using A Mobile Phone}
-This project allows a user to put a proxy between themselves and an untrusted computer for their websession \cite{Wu04secureweb}. The proxy server stores the usernames and passwords. A text message is used to authenticate the user's session to the proxy, and the proxy acquires the login sessions for the user so they do not have to enter their details on the suspicious computer.
-
-My solution takes a different approach to this one, theirs can run on any computer because they just need to connect to their secure proxy. I sacrifice the ability to work anywhere for allowing more uses than just the web, and users of my program can transfer their permissions from one computer to another without having to enter their username and password again.
-
-\subsection{QR Code Based Door Access}
-This project uses QR codes to open doors \cite{QRRelated}. The QR code does not expire which is dangerous, but it seems the main purpose of the project is for convenience over security. The idea behind their project is that a user can be emailed their access codes and seem intended to replace key cards. The problem with this method is that replay attacks could be set up to copy a user's QR code and give it to the attacker.
-
-My implementation differs from this because rather than storing an access key, the QR codes in my system store the TGT which could be used to get the user a login session at a computer as well as room access. Their system sends QR codes via email. If someone was able to perform a man in the middle on their mailserver they could gain access to every QR code emailed out.
 
 
 \section{Results}
